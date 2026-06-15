@@ -42,7 +42,7 @@ describe('detectSnippet', () => {
   });
 
   it('detects a json blob as code/json', () => {
-    const result = detectSnippet('{\n  "name": "faro",\n  "version": "0.1.0"\n}');
+    const result = detectSnippet('{\n  "name": "faro",\n  "version": "1.0.0"\n}');
     expect(result.content_type).toBe('code');
     expect(result.language).toBe('json');
   });

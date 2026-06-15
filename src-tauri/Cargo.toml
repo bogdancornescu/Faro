@@ -1,6 +1,6 @@
 [package]
 name = "faro"
-version = "0.1.0"
+version = "1.0.0"
 description = "A local-first developer snippet manager"
 edition = "2021"
 

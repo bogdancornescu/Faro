@@ -5,6 +5,28 @@
 Faro is a desktop app for capturing, organizing, and retrieving developer snippets: code, CLI commands, and notes. The core philosophy is **dump-first, organize-later**: zero friction on capture, smart retrieval when you need it.
 
 Built with Tauri v2 + Svelte 5.
+## Download
+
+<p align="center">
+  <a href="https://github.com/bogdancornescu/Faro/releases/latest">
+    <img src="https://img.shields.io/github/v/release/bogdancornescu/Faro?style=for-the-badge&label=Latest+Release&color=7c3aed" alt="Latest Release" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/bogdancornescu/Faro/releases/latest">
+    <img src="https://img.shields.io/badge/Windows-x64_installer-0078d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download for Windows" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/bogdancornescu/Faro/releases/latest">
+    <img src="https://img.shields.io/badge/Linux-.deb_(Debian%2FUbuntu%2FMint)-e95420?style=for-the-badge&logo=linux&logoColor=white" alt="Download for Linux" />
+  </a>
+</p>
+
+##
+
+![Main view](assets/Faro_1.png)
+
 
 ---
 
@@ -28,7 +50,6 @@ FTS5-powered search across all snippet titles and content. Results update as you
 highlight.js inspects content on save and automatically classifies it as `code`, `cli`, or `text`, plus detects the specific language (Rust, Python, bash, SQL, etc.) and creates system tags. You can override the type manually.
 
 ### Three-Panel Layout
-![Main view](assets/Faro_1.png)
 
 **Left panel** — timeline navigation, tag browser with inline filter, new snippet button, settings access.
 
@@ -46,7 +67,7 @@ Both are browsable from the left panel. Clicking a tag filters the center panel 
 ### Themes
 Dark (default), Light, and Nord.
 
-![Main view](assets/faro_3.webp)
+![Themes carousel](assets/faro_3.webp)
 ---
 
 ## Keyboard Shortcuts
@@ -71,7 +92,8 @@ Dark (default), Light, and Nord.
 | Shortcut | Action |
 |---|---|
 | `Ctrl+Shift+Space` | Open Quick Note (configurable) |
-![Main view](assets/Faro_2.png)
+
+![Quick note](assets/Faro_2.png)
 ---
 
 ## Settings
