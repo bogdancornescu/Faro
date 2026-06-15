@@ -25,7 +25,7 @@ Built with Tauri v2 + Svelte 5.
 
 ##
 
-![Main view](assets/Faro_1.png)
+![Main view](assets/faro_1.png)
 
 
 ---
@@ -93,7 +93,7 @@ Dark (default), Light, and Nord.
 |---|---|
 | `Ctrl+Shift+Space` | Open Quick Note (configurable) |
 
-![Quick note](assets/Faro_2.png)
+![Quick note](assets/faro_2.png)
 ---
 
 ## Settings
