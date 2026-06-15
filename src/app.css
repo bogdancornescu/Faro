@@ -1,0 +1,198 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+:root {
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-size-body: 14px;
+  --font-size-editor: 14px;
+
+  color-scheme: dark;
+
+  /* surfaces & lines */
+  --bg: #090b10;
+  --bg-sidebar: rgba(0, 0, 0, 0.15);
+  --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-surface-hover: rgba(255, 255, 255, 0.07);
+  --bg-card: rgba(255, 255, 255, 0.035);
+  --bg-card-hover: rgba(255, 255, 255, 0.055);
+  --bg-editor: rgba(255, 255, 255, 0.03);
+  --bg-code: transparent;
+  --bg-modal: #0f1117;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --preview-border: transparent;
+
+  /* text */
+  --text: #e2e8f0;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-faint: rgba(255, 255, 255, 0.25);
+
+  /* accent & state */
+  --accent: #9d7dea;
+  --accent-strong: #9d7dea;
+  --accent-contrast: #ffffff;
+  --accent-tint: rgba(157, 125, 234, 0.15);
+  --accent-tint-strong: rgba(157, 125, 234, 0.22);
+  --accent-border: rgba(157, 125, 234, 0.35);
+
+  /* semantic */
+  --success: #c3e88d;
+  --danger: #ef4444;
+
+  /* syntax */
+  --syntax-keyword: #c792ea;
+  --syntax-type: #ffcb6b;
+  --syntax-func: #82aaff;
+  --syntax-string: #c3e88d;
+  --syntax-comment: #5c6370;
+  --syntax-number: #f78c6c;
+  --syntax-operator: #89ddff;
+  --syntax-tag: #f07178;
+  --syntax-attr: #80cbc4;
+
+  /* editor chrome */
+  --cm-selection: rgba(157, 125, 234, 0.25);
+
+  /* layout (Dark) */
+  --radius-card: 8px;
+  --radius-control: 6px;
+  --radius-chip: 4px;
+  --card-pad: 0.65rem 0.9rem;
+  --list-gap: 0.4rem;
+  --list-pad: 0.6rem 0.75rem;
+  --panel-pad: 1.25rem;
+  --preview-pad: 0;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-sidebar: #f9fafb;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --bg-editor: #f9fafb;
+  --bg-code: #f9fafb;
+  --bg-modal: #ffffff;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --preview-border: #e5e7eb;
+  --text: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --accent: #6d5dfc;
+  --accent-strong: #6d5dfc;
+  --accent-contrast: #ffffff;
+  --accent-tint: rgba(109, 93, 252, 0.1);
+  --accent-tint-strong: rgba(109, 93, 252, 0.18);
+  --accent-border: #6d5dfc;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --syntax-keyword: #2563eb;
+  --syntax-type: #0891b2;
+  --syntax-func: #7c3aed;
+  --syntax-string: #16a34a;
+  --syntax-comment: #9ca3af;
+  --syntax-number: #dc2626;
+  --syntax-operator: #475569;
+  --syntax-tag: #be123c;
+  --syntax-attr: #0e7490;
+  --cm-selection: rgba(109, 93, 252, 0.2);
+}
+
+[data-theme='nord'] {
+  color-scheme: dark;
+  --bg: #2e3440;
+  --bg-sidebar: #2e3440;
+  --bg-surface: #3b4252;
+  --bg-surface-hover: #434c5e;
+  --bg-card: #3b4252;
+  --bg-card-hover: #3b4252;
+  --bg-editor: #3b4252;
+  --bg-code: #2e3440;
+  --bg-modal: #2e3440;
+  --border: #434c5e;
+  --border-strong: #4c566a;
+  --preview-border: #434c5e;
+  --text: #eceff4;
+  --text-secondary: #d8dee9;
+  --text-muted: #9aa5b8;
+  --text-faint: #828ea6;
+  --accent: #88c0d0;
+  --accent-strong: #5e81ac;
+  --accent-contrast: #eceff4;
+  --accent-tint: rgba(136, 192, 208, 0.1);
+  --accent-tint-strong: rgba(136, 192, 208, 0.2);
+  --accent-border: #88c0d0;
+  --success: #a3be8c;
+  --danger: #bf616a;
+  --syntax-keyword: #81a1c1;
+  --syntax-type: #8fbcbb;
+  --syntax-func: #88c0d0;
+  --syntax-string: #a3be8c;
+  --syntax-comment: #616e88;
+  --syntax-number: #b48ead;
+  --syntax-operator: #81a1c1;
+  --syntax-tag: #81a1c1;
+  --syntax-attr: #8fbcbb;
+  --cm-selection: rgba(136, 192, 208, 0.25);
+}
+
+/* Shared layout for the new (spacious) themes */
+[data-theme='light'],
+[data-theme='nord'] {
+  --radius-card: 12px;
+  --radius-control: 8px;
+  --radius-chip: 6px;
+  --card-pad: 1rem;
+  --list-gap: 1rem;
+  --list-pad: 1.5rem;
+  --panel-pad: 1.5rem;
+  --preview-pad: 0.5rem 0.6rem;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* highlight.js tokens for static card previews */
+.hljs-keyword, .hljs-built_in { color: var(--syntax-keyword); }
+.hljs-string, .hljs-meta .hljs-string { color: var(--syntax-string); }
+.hljs-comment { color: var(--syntax-comment); font-style: italic; }
+.hljs-number, .hljs-literal { color: var(--syntax-number); }
+.hljs-title, .hljs-title.function_ { color: var(--syntax-func); }
+.hljs-type, .hljs-title.class_ { color: var(--syntax-type); }
+.hljs-attr, .hljs-property { color: var(--syntax-attr); }
+.hljs-tag, .hljs-name { color: var(--syntax-tag); }
+.hljs-symbol, .hljs-operator, .hljs-punctuation { color: var(--syntax-operator); }
