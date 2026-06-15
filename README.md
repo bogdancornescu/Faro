@@ -28,7 +28,7 @@ FTS5-powered search across all snippet titles and content. Results update as you
 highlight.js inspects content on save and automatically classifies it as `code`, `cli`, or `text`, plus detects the specific language (Rust, Python, bash, SQL, etc.) and creates system tags. You can override the type manually.
 
 ### Three-Panel Layout
-![Main view](assets/Faro_1.png)
+![Main view](assets/faro_1.png)
 
 **Left panel** — timeline navigation, tag browser with inline filter, new snippet button, settings access.
 
@@ -46,7 +46,7 @@ Both are browsable from the left panel. Clicking a tag filters the center panel 
 ### Themes
 Dark (default), Light, and Nord.
 
-![Main view](assets/faro_3.webp)
+![Themes carousel](assets/faro_3.webp)
 ---
 
 ## Keyboard Shortcuts
@@ -71,7 +71,7 @@ Dark (default), Light, and Nord.
 | Shortcut | Action |
 |---|---|
 | `Ctrl+Shift+Space` | Open Quick Note (configurable) |
-![Main view](assets/Faro_2.png)
+![Quick notes](assets/faro_2.png)
 ---
 
 ## Settings
