@@ -43,6 +43,7 @@
   /* semantic */
   --success: #c3e88d;
   --danger: #ef4444;
+  --link: #60a5fa;
 
   /* syntax */
   --syntax-keyword: #c792ea;
@@ -95,6 +96,7 @@
   --accent-border: #6d5dfc;
   --success: #16a34a;
   --danger: #dc2626;
+  --link: #2563eb;
   --syntax-keyword: #2563eb;
   --syntax-type: #0891b2;
   --syntax-func: #7c3aed;
@@ -133,6 +135,7 @@
   --accent-border: #88c0d0;
   --success: #a3be8c;
   --danger: #bf616a;
+  --link: #5e81ac;
   --syntax-keyword: #81a1c1;
   --syntax-type: #8fbcbb;
   --syntax-func: #88c0d0;

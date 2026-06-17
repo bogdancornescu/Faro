@@ -97,7 +97,7 @@
     <div class="field">
       <label for="type-buttons">Type</label>
       <div class="type-buttons" id="type-buttons" role="group">
-        {#each (['code', 'cli', 'text'] as ContentType[]) as t (t)}
+        {#each (['code', 'cli', 'text', 'url'] as ContentType[]) as t (t)}
           <button
             class="type-btn"
             class:active={contentType === t}

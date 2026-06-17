@@ -6,6 +6,7 @@ pub enum ContentType {
     Code,
     Cli,
     Text,
+    Url,
 }
 
 impl std::fmt::Display for ContentType {
@@ -14,6 +15,7 @@ impl std::fmt::Display for ContentType {
             ContentType::Code => write!(f, "code"),
             ContentType::Cli => write!(f, "cli"),
             ContentType::Text => write!(f, "text"),
+            ContentType::Url => write!(f, "url"),
         }
     }
 }
@@ -25,6 +27,7 @@ impl std::str::FromStr for ContentType {
             "code" => Ok(ContentType::Code),
             "cli" => Ok(ContentType::Cli),
             "text" => Ok(ContentType::Text),
+            "url" => Ok(ContentType::Url),
             other => Err(format!("unknown content_type: {other}")),
         }
     }
@@ -36,6 +39,7 @@ pub struct Snippet {
     pub title: String,
     pub content: String,
     pub content_type: ContentType,
+    pub copy_count: i64,
     pub created_at: String,
     pub updated_at: String,
     pub tags: Vec<Tag>,

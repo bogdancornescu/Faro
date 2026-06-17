@@ -1,4 +1,4 @@
-export type ContentType = 'code' | 'cli' | 'text';
+export type ContentType = 'code' | 'cli' | 'text' | 'url';
 
 export interface Tag {
   id: number;
@@ -15,6 +15,7 @@ export interface Snippet {
   title: string;
   content: string;
   content_type: ContentType;
+  copy_count: number;
   created_at: string;
   updated_at: string;
   tags: Tag[];
