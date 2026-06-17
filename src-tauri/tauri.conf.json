@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "Faro",
-        "width": 1100,
-        "height": 720,
+        "width": 1300,
+        "height": 900,
         "minWidth": 800,
         "minHeight": 520,
         "resizable": true

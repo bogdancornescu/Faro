@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Settings, Plus, Clock, Tag as TagIcon, Search } from 'lucide-svelte';
-  import type { Tag, TimePeriod } from '$lib/types';
+  import { Settings, Plus, Clock, Tag as TagIcon, Search, Code2, Terminal, FileText, Link, Layers } from 'lucide-svelte';
+  import type { Tag, TimePeriod, ContentType } from '$lib/types';
 
   const TIMELINE_ITEMS: { label: string; value: TimePeriod }[] = [
     { label: 'Today', value: 'today' },
@@ -10,10 +10,19 @@
     { label: 'Older', value: 'older' },
   ];
 
+  const CONTENT_TYPES: { label: string; value: ContentType; Icon: typeof Code2 }[] = [
+    { label: 'Code', value: 'code', Icon: Code2 },
+    { label: 'CLI', value: 'cli', Icon: Terminal },
+    { label: 'Text', value: 'text', Icon: FileText },
+    { label: 'Url', value: 'url', Icon: Link },
+  ];
+
   let {
     tags,
     activeFilter = null,
+    contentTypeFilter = null,
     onFilterChange,
+    onContentTypeChange = () => {},
     onNewSnippet,
     onOpenSettings = () => {},
     timePeriodFilter = null,
@@ -21,7 +30,9 @@
   }: {
     tags: Tag[];
     activeFilter?: string | null;
+    contentTypeFilter?: ContentType | null;
     onFilterChange: (tag: string | null) => void;
+    onContentTypeChange?: (ct: ContentType | null) => void;
     onNewSnippet: () => void;
     onOpenSettings?: () => void;
     timePeriodFilter?: TimePeriod | null;
@@ -34,14 +45,13 @@
       ? tags.filter(t => t.name.toLowerCase().includes(tagSearch.toLowerCase()))
       : tags
   );
+
+  function toggleContentType(ct: ContentType) {
+    onContentTypeChange(contentTypeFilter === ct ? null : ct);
+  }
 </script>
 
 <aside class="left-panel">
-  <!-- <div class="panel-header">
-    <img src="/logo.svg" alt="Faro Logo" width="64" height="64" />
-    <span class="brand">Faro</span>
-  </div> -->
-
   <div class="panel-body">
     <!-- Timeline section -->
     <div class="section">
@@ -55,6 +65,26 @@
           {item.label}
         </button>
       {/each}
+    </div>
+
+    <div class="divider-strong"></div>
+
+    <!-- Content Type section -->
+    <div class="section">
+      <div class="section-label"><Layers size={10} strokeWidth={2.5} />Content Type</div>
+      <div class="ct-row">
+        {#each CONTENT_TYPES as ct (ct.value)}
+          <button
+            class="ct-chip"
+            class:active={contentTypeFilter === ct.value}
+            onclick={() => toggleContentType(ct.value)}
+            title={ct.label}
+          >
+            <ct.Icon size={12} strokeWidth={2} />
+            <span>{ct.label}</span>
+          </button>
+        {/each}
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -75,8 +105,8 @@
       {#if !tagSearch.trim()}
         <button
           class="nav-item"
-          class:active={activeFilter === null && timePeriodFilter === null}
-          onclick={() => { onFilterChange(null); onTimePeriodChange(null); }}
+          class:active={activeFilter === null && timePeriodFilter === null && contentTypeFilter === null}
+          onclick={() => { onFilterChange(null); onTimePeriodChange(null); onContentTypeChange(null); }}
         >
           All snippets
         </button>
@@ -117,20 +147,6 @@
     border-right: 1px solid var(--border);
     background: var(--bg-sidebar);
   }
-  /* .panel-header {
-    padding: 1rem 1rem 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .brand {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-  } */
   .panel-body {
     flex: 1;
     min-height: 0;
@@ -161,6 +177,46 @@
     height: 1px;
     background: var(--border);
     margin: 0.25rem 0;
+  }
+  
+  .divider-strong {
+    height: 1px;
+    background: var(--border-strong, var(--border));
+    margin: 0.5rem 0;
+    opacity: 0.6;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  /* Content type chip row */
+  .ct-row {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.1rem 1rem 0.35rem;
+  }
+  .ct-chip {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.35rem 0.2rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-chip);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s, color 0.1s;
+  }
+  .ct-chip:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+  .ct-chip.active {
+    background: var(--accent-tint);
+    border-color: var(--accent-border);
+    color: var(--accent);
   }
   .tag-search-wrap {
     position: relative;

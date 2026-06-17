@@ -3,6 +3,9 @@
   import { detectSnippet } from '$lib/highlight';
   import CodeEditor from './CodeEditor.svelte';
   import { LANGUAGE_OPTIONS } from '$lib/languages';
+  import { Copy, Check } from 'lucide-svelte';
+  import { copyToClipboard } from '$lib/api';
+  import { snippets as store } from '$lib/stores/snippets.svelte';
 
   let { snippet = null, mode, onSave, onCancel, onDelete, dirty = $bindable(false) }: {
     snippet?: Snippet | null;
@@ -21,6 +24,16 @@
   let draftSuppressedTags = $state<string[]>([]);
   let typeManuallySet = $state(false);
   let systemTagsManuallySet = $state(false);
+  let detailCopied = $state(false);
+
+  async function handleDetailCopy() {
+    try {
+      await copyToClipboard(draftContent);
+      detailCopied = true;
+      setTimeout(() => { detailCopied = false; }, 1500);
+      if (snippet) store.recordCopy(snippet.id);
+    } catch { /* clipboard unavailable */ }
+  }
 
   // Re-initialize draft whenever mode or snippet changes.
   $effect(() => {
@@ -145,7 +158,7 @@
       <label for="type-buttons">Type</label>
       <div class="type-row">
         <div class="type-buttons" id="type-buttons" role="group">
-          {#each (['code', 'cli', 'text'] as ContentType[]) as t (t)}
+          {#each (['code', 'cli', 'text', 'url'] as ContentType[]) as t (t)}
             <button
               class="type-btn"
               class:active={draftType === t}
@@ -170,6 +183,20 @@
     </div>
 
     <div class="field grow">
+      <div class="content-label-row">
+        <label>Content</label>
+        {#if mode === 'editing' && snippet}
+          <button class="content-copy-btn" onclick={handleDetailCopy}>
+            {#if detailCopied}
+              <Check size={12} strokeWidth={2.5} />
+              <span>Copied</span>
+            {:else}
+              <Copy size={12} strokeWidth={2} />
+              <span>Copy</span>
+            {/if}
+          </button>
+        {/if}
+      </div>
       <CodeEditor
         bind:value={draftContent}
         contentType={draftType}
@@ -268,6 +295,30 @@
   .title-input:hover:not(:focus) { border-bottom-color: var(--border); }
   .title-input:focus { border-bottom-color: var(--accent-border); }
   .title-input::placeholder { color: var(--text-faint); font-weight: 400; }
+  .content-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .content-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-chip);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: var(--font-body);
+    padding: 0.15rem 0.5rem;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .content-copy-btn:hover {
+    background: var(--bg-surface-hover);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
   .system-tags {
     display: flex;
     flex-wrap: wrap;

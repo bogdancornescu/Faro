@@ -1,14 +1,15 @@
 <script lang="ts">
   import SnippetCard from '$lib/components/SnippetCard.svelte';
   import SearchBar from '$lib/components/SearchBar.svelte';
-  import type { Snippet, TimePeriod } from '$lib/types';
+  import type { Snippet, TimePeriod, ContentType } from '$lib/types';
 
-  let { snippets, selectedId, loading = false, searchQuery, tagFilter = null, timePeriodFilter = null, onSelect, onSearch, searchInputEl = $bindable() }: {
+  let { snippets, selectedId, loading = false, searchQuery, tagFilter = null, contentTypeFilter = null, timePeriodFilter = null, onSelect, onSearch, searchInputEl = $bindable() }: {
     snippets: Snippet[];
     selectedId: number | null;
     loading?: boolean;
     searchQuery: string;
     tagFilter?: string | null;
+    contentTypeFilter?: ContentType | null;
     timePeriodFilter?: TimePeriod | null;
     onSelect: (id: number) => void;
     onSearch: (q: string) => void;
@@ -23,14 +24,25 @@
     'older': 'older than two weeks',
   };
 
+  const CT_LABELS: Record<ContentType, string> = {
+    code: 'code',
+    cli: 'CLI',
+    text: 'text',
+    url: 'URL',
+  };
+
   const emptyMessage = $derived(
     searchQuery
       ? 'No snippets match your search.'
       : timePeriodFilter
         ? `No snippets from ${PERIOD_LABELS[timePeriodFilter]}.`
-        : tagFilter
-          ? `No snippets tagged "${tagFilter}".`
-          : 'No snippets yet — create one with the button on the left.'
+        : tagFilter && contentTypeFilter
+          ? `No ${CT_LABELS[contentTypeFilter]} snippets tagged "${tagFilter}".`
+          : tagFilter
+            ? `No snippets tagged "${tagFilter}".`
+            : contentTypeFilter
+              ? `No ${CT_LABELS[contentTypeFilter]} snippets.`
+              : 'No snippets yet — create one with the button on the left.'
   );
 </script>
 
