@@ -2,6 +2,19 @@ import hljs from 'highlight.js/lib/common';
 import type { ContentType } from './types';
 import { SUBSET } from './languages';
 
+// ── URL recognition ──────────────────────────────────────────────────────────
+
+const URL_PROTOCOLS = new Set(['http:', 'https:', 'ftp:']);
+
+function looksLikeUrl(content: string): boolean {
+  if (content.includes('\n')) return false;
+  try {
+    return URL_PROTOCOLS.has(new URL(content).protocol);
+  } catch {
+    return false;
+  }
+}
+
 // ── CLI recognition ──────────────────────────────────────────────────────────
 
 const SHELL_COMMANDS = new Set([
@@ -64,6 +77,10 @@ export function detectSnippet(
 ): { content_type: ContentType; language: string | null } {
   const trimmed = content.trim();
   if (!trimmed) return { content_type: 'text', language: null };
+
+  if (looksLikeUrl(trimmed)) {
+    return { content_type: 'url', language: null };
+  }
 
   if (looksLikeCli(trimmed)) {
     return { content_type: 'cli', language: null };

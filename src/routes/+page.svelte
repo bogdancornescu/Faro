@@ -7,7 +7,7 @@
   import CenterPanel from '$lib/components/layout/CenterPanel.svelte';
   import RightPanel from '$lib/components/layout/RightPanel.svelte';
   import SettingsModal from '$lib/components/SettingsModal.svelte';
-  import type { CreateSnippetInput, UpdateSnippetInput, TimePeriod } from '$lib/types';
+  import type { CreateSnippetInput, UpdateSnippetInput, TimePeriod, ContentType } from '$lib/types';
 
   let mode = $state<'idle' | 'creating' | 'editing'>('idle');
   let formDirty = $state(false);
@@ -118,12 +118,19 @@
 
 <div class="app-layout">
   <LeftPanel
-    tags={store.tags}
+    tags={store.visibleTags}
     activeFilter={store.tagFilter}
+    contentTypeFilter={store.contentTypeFilter}
     timePeriodFilter={store.timePeriodFilter}
     onFilterChange={(tag) => {
       if (formDirty && !confirm('You have unsaved changes. Discard them?')) return;
       store.setTagFilter(tag);
+      store.select(null);
+      mode = 'idle';
+    }}
+    onContentTypeChange={(ct: ContentType | null) => {
+      if (formDirty && !confirm('You have unsaved changes. Discard them?')) return;
+      store.setContentTypeFilter(ct);
       store.select(null);
       mode = 'idle';
     }}
@@ -142,6 +149,7 @@
     loading={store.loading}
     searchQuery={store.searchQuery}
     tagFilter={store.tagFilter}
+    contentTypeFilter={store.contentTypeFilter}
     timePeriodFilter={store.timePeriodFilter}
     onSelect={handleSelectSnippet}
     onSearch={(q) => {
@@ -170,7 +178,7 @@
 <style>
   .app-layout {
     display: grid;
-    grid-template-columns: 220px 1fr 360px;
+    grid-template-columns: 270px 1fr 360px;
     grid-template-rows: 100vh;
     height: 100vh;
     overflow: hidden;

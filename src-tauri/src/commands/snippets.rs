@@ -25,7 +25,7 @@ fn load_tags(conn: &Connection, snippet_id: i64) -> Result<Vec<Tag>, AppError> {
 
 fn load_snippet(conn: &Connection, id: i64) -> Result<Snippet, AppError> {
     let mut snippet = conn.query_row(
-        "SELECT id, title, content, content_type, created_at, updated_at \
+        "SELECT id, title, content, content_type, copy_count, created_at, updated_at \
          FROM snippet WHERE id = ?1",
         [id],
         |r| {
@@ -35,8 +35,9 @@ fn load_snippet(conn: &Connection, id: i64) -> Result<Snippet, AppError> {
                 title: r.get(1)?,
                 content: r.get(2)?,
                 content_type: ct.parse::<ContentType>().unwrap_or(ContentType::Text),
-                created_at: r.get(4)?,
-                updated_at: r.get(5)?,
+                copy_count: r.get(4)?,
+                created_at: r.get(5)?,
+                updated_at: r.get(6)?,
                 tags: vec![],
             })
         },
@@ -71,7 +72,7 @@ fn load_snippets_for_ids(conn: &Connection, ids: &[i64]) -> Result<Vec<Snippet>,
         .collect::<Vec<_>>()
         .join(", ");
     let snippet_sql = format!(
-        "SELECT id, title, content, content_type, created_at, updated_at \
+        "SELECT id, title, content, content_type, copy_count, created_at, updated_at \
          FROM snippet WHERE id IN ({placeholders})"
     );
     let mut stmt = conn.prepare(&snippet_sql)?;
@@ -83,8 +84,9 @@ fn load_snippets_for_ids(conn: &Connection, ids: &[i64]) -> Result<Vec<Snippet>,
                 title: r.get(1)?,
                 content: r.get(2)?,
                 content_type: ct.parse::<ContentType>().unwrap_or(ContentType::Text),
-                created_at: r.get(4)?,
-                updated_at: r.get(5)?,
+                copy_count: r.get(4)?,
+                created_at: r.get(5)?,
+                updated_at: r.get(6)?,
                 tags: vec![],
             })
         })?
@@ -119,7 +121,7 @@ fn db_list_snippets(
     let ids: Vec<i64> = match tag_filter {
         None => {
             let mut stmt = conn
-                .prepare("SELECT id FROM snippet ORDER BY created_at DESC, id DESC")?;
+                .prepare("SELECT id FROM snippet ORDER BY copy_count DESC, created_at DESC, id DESC")?;
             let rows = stmt.query_map([], |r| r.get(0))?
                 .collect::<Result<Vec<_>, _>>()?;
             rows
@@ -130,7 +132,7 @@ fn db_list_snippets(
                  JOIN snippet_tag st ON st.snippet_id = s.id \
                  JOIN tag t ON t.id = st.tag_id \
                  WHERE t.name = ?1 AND st.source != 'suppressed' \
-                 ORDER BY s.created_at DESC, s.id DESC",
+                 ORDER BY s.copy_count DESC, s.created_at DESC, s.id DESC",
             )?;
             let rows = stmt.query_map([tag], |r| r.get(0))?
                 .collect::<Result<Vec<_>, _>>()?;

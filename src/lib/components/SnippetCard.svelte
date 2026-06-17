@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { Code2, Terminal, FileText, Copy, Check } from 'lucide-svelte';
+  import { Code2, Terminal, FileText, Link, Copy, Check } from 'lucide-svelte';
   import type { Snippet } from '$lib/types';
-  import { copyToClipboard, recordCopy } from '$lib/api';
+  import { copyToClipboard } from '$lib/api';
+  import { snippets as store } from '$lib/stores/snippets.svelte';
   import { highlightPreviewHtml } from '$lib/highlight';
 
   let { snippet, selected = false, onselect }: {
@@ -32,7 +33,7 @@
       await copyToClipboard(snippet.content);
       copied = true;
       setTimeout(() => { copied = false; }, 1500);
-      recordCopy(snippet.id).catch(() => {});
+      store.recordCopy(snippet.id);
     } catch { /* clipboard unavailable */ }
   }
 </script>
@@ -52,11 +53,16 @@
         <Code2 size={13} strokeWidth={2} />
       {:else if snippet.content_type === 'cli'}
         <Terminal size={13} strokeWidth={2} />
+      {:else if snippet.content_type === 'url'}
+        <Link size={13} strokeWidth={2} />
       {:else}
         <FileText size={13} strokeWidth={2} />
       {/if}
     </span>
     <span class="title">{snippet.title || 'Untitled'}</span>
+    {#if snippet.copy_count > 0}
+      <span class="copy-count">{snippet.copy_count}</span>
+    {/if}
     <button class="copy-btn" onclick={copyContent}>
       {#if copied}
         <Check size={12} strokeWidth={2.5} />
@@ -113,6 +119,7 @@
   .type-icon.code { color: var(--accent); }
   .type-icon.cli { color: var(--success); }
   .type-icon.text { color: var(--text-muted); }
+  .type-icon.url { color: var(--link); }
   .title {
     flex: 1;
     font-size: 14px;
@@ -120,6 +127,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .copy-count {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
   }
   .copy-btn {
     flex-shrink: 0;

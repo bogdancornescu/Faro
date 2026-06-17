@@ -25,7 +25,7 @@ Built with Tauri v2 + Svelte 5.
 
 ##
 
-![Main view](assets/Faro_1.png)
+![Main view](assets/faro_1.png)
 
 
 ---
@@ -47,15 +47,15 @@ Global hotkey (`Ctrl+Shift+Space` by default) opens a focused floating window �
 FTS5-powered search across all snippet titles and content. Results update as you type. 
 
 ### Auto Content Detection
-highlight.js inspects content on save and automatically classifies it as `code`, `cli`, or `text`, plus detects the specific language (Rust, Python, bash, SQL, etc.) and creates system tags. You can override the type manually.
+highlight.js inspects content on save and automatically classifies it as `code`, `cli`, `text`, or `url`, plus detects the specific language (Rust, Python, bash, SQL, etc.) and creates system tags. URL detection triggers on single-line `http`/`https`/`ftp` content. You can override the type manually.
 
 ### Three-Panel Layout
 
-**Left panel** — timeline navigation, tag browser with inline filter, new snippet button, settings access.
+**Left panel** — timeline navigation, content type filter (Code / CLI / Text / URL chips), tag browser with inline filter scoped to the active type, new snippet button, settings access.
 
-**Center panel** — full-text search bar, snippet list with type icons and 2-line previews, tag chips (user tags and auto-detected language tags are visually distinct).
+**Center panel** — full-text search bar, snippet list with type icons, copy count badge, and 2-line previews; tag chips (user tags and auto-detected language tags are visually distinct). Snippets are ordered by most-copied first, then by recency.
 
-**Right panel** — snippet content, directly editable in place. Explicit save keeps accidental edits from destroying data.
+**Right panel** — snippet content, directly editable in place. Explicit save keeps accidental edits from destroying data. A **Copy** button next to the content label copies to clipboard and increments the copy counter.
 
 ### Tag System
 Two tag sources coexist on each snippet:
@@ -93,7 +93,7 @@ Dark (default), Light, and Nord.
 |---|---|
 | `Ctrl+Shift+Space` | Open Quick Note (configurable) |
 
-![Quick note](assets/Faro_2.png)
+![Quick note](assets/faro_2.png)
 ---
 
 ## Settings
