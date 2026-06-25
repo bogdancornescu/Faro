@@ -8,6 +8,7 @@
     "core:window:allow-close",
     "global-shortcut:allow-register",
     "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-read-text",
     "store:default"
   ]
 }
