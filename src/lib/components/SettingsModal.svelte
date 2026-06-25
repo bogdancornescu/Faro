@@ -6,6 +6,7 @@
   let draftHotkey = $state(settings.hotkey);
   let draftFontSize = $state(settings.fontSize);
   let draftStayOpen = $state(settings.quickNoteStayOpen);
+  let draftClipboardPrefill = $state(settings.clipboardPrefill);
   let draftTheme = $state(settings.theme);
   let saving = $state(false);
   let error = $state<string | null>(null);
@@ -18,6 +19,7 @@
       draftHotkey = settings.hotkey;
       draftFontSize = settings.fontSize;
       draftStayOpen = settings.quickNoteStayOpen;
+      draftClipboardPrefill = settings.clipboardPrefill;
       draftTheme = settings.theme;
       error = null;
       setTimeout(() => overlayEl?.focus(), 0);
@@ -52,6 +54,7 @@
         hotkey: draftHotkey,
         fontSize: draftFontSize,
         quickNoteStayOpen: draftStayOpen,
+        clipboardPrefill: draftClipboardPrefill,
         theme: draftTheme,
       });
       onclose();
@@ -119,6 +122,16 @@
             id="stay-open-toggle"
             type="checkbox"
             bind:checked={draftStayOpen}
+            class="setting-checkbox"
+          />
+        </div>
+
+        <div class="setting-row">
+          <label for="clipboard-prefill-toggle" class="setting-label">Prefill Quick Note from clipboard</label>
+          <input
+            id="clipboard-prefill-toggle"
+            type="checkbox"
+            bind:checked={draftClipboardPrefill}
             class="setting-checkbox"
           />
         </div>

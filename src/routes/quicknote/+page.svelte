@@ -2,10 +2,13 @@
   import { onMount } from 'svelte';
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { emit } from '@tauri-apps/api/event';
+  import { readText } from '@tauri-apps/plugin-clipboard-manager';
   import { createSnippet } from '$lib/api';
   import { detectSnippet } from '$lib/highlight';
   import { settings } from '$lib/stores/settings.svelte';
   import type { ContentType } from '$lib/types';
+
+  const TITLE_MAX = 60;
 
   let title = $state('');
   let content = $state('');
@@ -15,7 +18,50 @@
   let saved = $state(false);
   let saving = $state(false);
   let saveError = $state<string | null>(null);
-  const canSave = $derived(!saving && (title.trim() !== '' || content.trim() !== ''));
+
+  let contentPrefilled = $state(false);
+  let titleEdited = $state(false);
+
+  const suggestedTitle = $derived.by(() => {
+    const firstLine = content.split('\n').find((l) => l.trim().length > 0)?.trim() ?? '';
+    return firstLine.length > TITLE_MAX
+      ? `${firstLine.slice(0, TITLE_MAX).trimEnd()}…`
+      : firstLine;
+  });
+
+  const canSave = $derived(
+    !saving && ((titleEdited ? title.trim() : suggestedTitle) !== '' || content.trim() !== ''),
+  );
+
+  function onTitleInput(e: Event) {
+    titleEdited = true;
+    title = (e.currentTarget as HTMLInputElement).value;
+  }
+
+  function clearPrefill() {
+    content = '';
+    contentPrefilled = false;
+    titleEdited = false;
+    title = '';
+    systemTags = [];
+    contentType = 'text';
+    document.getElementById('content-area')?.focus();
+  }
+
+  async function prefillFromClipboard() {
+    if (!settings.loaded) await settings.load();
+    if (!settings.clipboardPrefill) return;
+    try {
+      const text = await readText();
+      if (text && text.trim()) {
+        content = text;
+        contentPrefilled = true;
+        try { runDetection(); } catch { /* detection is best-effort */ }
+      }
+    } catch {
+      /* clipboard empty or non-text — nothing to suggest */
+    }
+  }
 
   function runDetection() {
     if (!content.trim()) { systemTags = []; return; }
@@ -38,7 +84,7 @@
         .map(name => ({ name, source: 'user' }));
       const sysTags = systemTags.map(name => ({ name, source: 'system' }));
       await createSnippet({
-        title: title.trim() || 'Untitled',
+        title: (titleEdited ? title.trim() : '') || suggestedTitle || 'Untitled',
         content,
         content_type: contentType,
         tags: [...userTags, ...sysTags],
@@ -54,6 +100,8 @@
           tags = '';
           systemTags = [];
           contentType = 'text';
+          contentPrefilled = false;
+          titleEdited = false;
           saved = false;
           saving = false;
         }, 800);
@@ -69,12 +117,18 @@
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') getCurrentWindow().close();
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleSave();
+    // Ctrl+Shift+X clears the clipboard suggestion; only active while one is shown.
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'x' || e.key === 'X') && contentPrefilled) {
+      e.preventDefault();
+      clearPrefill();
+    }
   }
 
   onMount(() => {
     settings.load().then(() => {
       document.documentElement.style.setProperty('--font-size-editor', `${settings.fontSize}px`);
     });
+    prefillFromClipboard();
   });
 </script>
 
@@ -89,9 +143,11 @@
     <input
       id="title-input"
       type="text"
-      bind:value={title}
+      value={titleEdited ? title : suggestedTitle}
+      oninput={onTitleInput}
       placeholder="Untitled snippet"
       class="title-input"
+      class:suggested={!titleEdited && suggestedTitle !== ''}
     />
 
     <div class="field">
@@ -108,13 +164,21 @@
     </div>
 
     <div class="field grow">
+      {#if contentPrefilled}
+        <div class="prefill-chip">
+          <span>Prefilled from clipboard</span>
+          <button type="button" class="clear-btn" onclick={clearPrefill}>Clear (Ctrl+Shift+X)</button>
+        </div>
+      {/if}
       <!-- svelte-ignore a11y_autofocus -->
       <textarea
         id="content-area"
         bind:value={content}
+        oninput={() => { contentPrefilled = false; }}
         onblur={runDetection}
         placeholder="Paste your snippet here…"
         class="content-area"
+        class:suggested={contentPrefilled}
         spellcheck="false"
         autofocus
       ></textarea>
@@ -217,6 +281,8 @@
   .title-input:hover:not(:focus) { border-bottom-color: var(--border); }
   .title-input:focus { border-bottom-color: var(--accent-border); }
   .title-input::placeholder { color: var(--text-faint); font-weight: 400; }
+  
+  .title-input.suggested:not(:focus) { color: var(--text-muted); }
 
   .tags-input {
     background: var(--bg-surface);
@@ -275,6 +341,36 @@
   .content-area:focus {
     border-color: var(--accent-border);
   }
+
+  /* Clipboard-seeded content: subtle accent edge until the user edits it. */
+  .content-area.suggested {
+    border-color: var(--accent-border);
+    border-left-width: 3px;
+    background: var(--accent-tint);
+  }
+
+  .prefill-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: -0.05rem;
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 11px;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .clear-btn:hover { color: var(--text); }
 
   .save-error {
     background: rgba(239, 68, 68, 0.12);

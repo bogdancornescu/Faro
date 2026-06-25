@@ -5,6 +5,7 @@ const DEFAULTS = {
   hotkey: 'Ctrl+Shift+Space',
   fontSize: 13,
   quickNoteStayOpen: false,
+  clipboardPrefill: true,
   theme: 'dark',
 };
 
@@ -14,6 +15,7 @@ class SettingsStore {
   hotkey = $state(DEFAULTS.hotkey);
   fontSize = $state(DEFAULTS.fontSize);
   quickNoteStayOpen = $state(DEFAULTS.quickNoteStayOpen);
+  clipboardPrefill = $state(DEFAULTS.clipboardPrefill);
   theme = $state(DEFAULTS.theme);
   loaded = $state(false);
 
@@ -22,6 +24,7 @@ class SettingsStore {
     this.hotkey = (await store.get<string>('hotkey')) ?? DEFAULTS.hotkey;
     this.fontSize = (await store.get<number>('fontSize')) ?? DEFAULTS.fontSize;
     this.quickNoteStayOpen = (await store.get<boolean>('quickNoteStayOpen')) ?? DEFAULTS.quickNoteStayOpen;
+    this.clipboardPrefill = (await store.get<boolean>('clipboardPrefill')) ?? DEFAULTS.clipboardPrefill;
     this.theme = (await store.get<string>('theme')) ?? DEFAULTS.theme;
     this.loaded = true;
     this.applyFontSize();
@@ -40,6 +43,7 @@ class SettingsStore {
     hotkey?: string;
     fontSize?: number;
     quickNoteStayOpen?: boolean;
+    clipboardPrefill?: boolean;
     theme?: string;
   }): Promise<void> {
     const store = await load(STORE_FILE, { autoSave: false, defaults: DEFAULTS });
@@ -56,6 +60,10 @@ class SettingsStore {
     if (patch.quickNoteStayOpen !== undefined) {
       this.quickNoteStayOpen = patch.quickNoteStayOpen;
       await store.set('quickNoteStayOpen', patch.quickNoteStayOpen);
+    }
+    if (patch.clipboardPrefill !== undefined) {
+      this.clipboardPrefill = patch.clipboardPrefill;
+      await store.set('clipboardPrefill', patch.clipboardPrefill);
     }
     if (patch.theme !== undefined) {
       this.theme = patch.theme;
